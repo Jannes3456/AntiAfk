@@ -1,18 +1,13 @@
--- Anti-AFK Script mit zufälliger Bewegung
-local player = game:GetService("Players").LocalPlayer
-local character = player.Character or player.CharacterAdded:Wait()
-local humanoid = character:WaitForChild("Humanoid")
-local directions = {Vector3.new(1, 0, 0), Vector3.new(-1, 0, 0), Vector3.new(0, 0, 1), Vector3.new(0, 0, -1)} -- Vorwärts, Rückwärts, Links, Rechts
+-- Anti-AFK Script mit zufälligen Tastendrücken
+local VirtualInputManager = game:GetService("VirtualInputManager")
+local keys = {"W", "A", "S", "D", "Space"} -- Mögliche Tasten
 
 while true do
-    local randomAction = math.random(1, 5) -- Zufällig zwischen 1 und 5 wählen
-    if randomAction == 5 then
-        humanoid.Jump = true -- Spieler springen lassen
-        print("Anti-AFK: Springen!")
-    else
-        local direction = directions[randomAction] -- Zufällige Richtung auswählen
-        character:TranslateBy(direction) -- Spieler bewegen
-        print("Anti-AFK: Bewegt in Richtung", direction)
-    end
-    wait(5) -- 5 Sekunden warten
+    local randomKey = keys[math.random(1, #keys)] -- Zufällige Taste wählen
+    VirtualInputManager:SendKeyEvent(true, randomKey, false, nil) -- Taste drücken
+    print("Anti-AFK: Taste gedrückt ->", randomKey)
+    wait(1) -- 1 Sekunde "halten"
+    VirtualInputManager:SendKeyEvent(false, randomKey, false, nil) -- Taste loslassen
+    print("Anti-AFK: Taste losgelassen ->", randomKey)
+    wait(4) -- 4 Sekunden warten, bis der nächste Zyklus startet (insgesamt 5 Sekunden)
 end
